@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: loreal
+  name: roboshop
   labels:
     project_name: loreal_shumera
     dev: Ashok
