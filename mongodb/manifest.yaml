@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    project: roboshop
+    component: mongodb
+    tier: db
+
+spec:
+  # modify replicas according to your case
+  replicas: 2
+  selector:
+    matchLabels:
+      project: roboshop
+      component: mongodb
+      tier: db
+   
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        component: mongodb
+        tier: db
+    spec:
+      containers:
+      - name: mongodb
+        image: challtoor/mongodb:1.0.0
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  labels:
+        project: roboshop
+        component: mongodb
+        tier: db
+  namespace: loreal
+spec:
+  selector:
+    #lables
+      project_name: roboshop
+      component: mongodb
+      dev: Ashokreddy
+      Devops: murali
+      env: dev
+  ports:
+  - protocol: TCP
+    port: 27017 # service port
+    targetPort: 27017 # container port
