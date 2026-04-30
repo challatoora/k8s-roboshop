@@ -10,7 +10,7 @@ metadata:
 
 spec:
   # modify replicas according to your case
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       project: roboshop
@@ -42,7 +42,7 @@ metadata:
 spec:
   selector:
     #lables
-      project_name: roboshop
+      project: roboshop
       component: mongodb
       tier: db
   ports:
