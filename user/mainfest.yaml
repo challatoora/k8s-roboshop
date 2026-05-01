@@ -11,7 +11,7 @@ data:
   REDIS_URL: "redis://redis:6379"
   MONGO_URL: "mongodb://mongodb:27017/users"
   MONGO: "true"
-  
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -39,7 +39,7 @@ spec:
         tier: be
     spec:
       containers:
-      - name: cart
+      - name: user
         image: challatoor/user:1.0.0
         imagePullPolicy: Always
         resources:
