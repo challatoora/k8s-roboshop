@@ -41,6 +41,7 @@ spec:
       containers:
       - name: catalogue
         image: challatoor/catalogue:1.0.0
+        imagePullPolicy: Always
         resources:
           requests:
             cpu: "100m"
