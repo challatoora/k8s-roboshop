@@ -67,6 +67,25 @@ spec:
         #     port: 8080
         #   failureThreshold: 2
         #   periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+          initialDelaySeconds: 30
+
+        startupProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 30
+          periodSeconds: 10
+
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+          initialDelaySeconds: 30
         envFrom:
         - configMapRef:
             name: shipping
