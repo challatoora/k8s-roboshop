@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - name: shipping
-        image: challatoor/shipping:1.0.0
+        image: challatoor/shipping:1.4.0
         imagePullPolicy: Always
         resources:
           requests:
