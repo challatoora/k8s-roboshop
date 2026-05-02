@@ -1,3 +1,99 @@
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+#   labels:
+#     project: roboshop
+#     component: shipping
+#     tier: be
+# data:
+#   CART_ENDPOINT: "cart:8080"
+#   DB_HOST: "mysql"
+
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+#   labels:
+#     project: roboshop
+#     component: shipping
+#     tier: be
+
+# spec:
+#   # modify replicas according to your case
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       project: roboshop
+#       component: shipping
+#       tier: be
+   
+#   template:
+#     metadata:
+#       labels:
+#         project: roboshop
+#         component: shipping
+#         tier: be
+#     spec:
+#       containers:
+#       - name: shipping
+#         image: challatoor/shipping:1.4.0
+#         imagePullPolicy: Always
+#         resources:
+#           requests:
+#             cpu: "100m"
+#             memory: "128Mi"
+#           limits:
+#             cpu: "100m"
+#             memory: "128Mi"
+#         readinessProbe:
+#           tcpSocket:
+#             port: 8080
+#           failureThreshold: 5
+#           periodSeconds: 10
+#           initialDelaySeconds: 60
+#         startupProbe:
+#           httpGet:
+#             path: /health
+#             port: 8080
+#           failureThreshold: 20
+#           periodSeconds: 10
+#         livenessProbe:
+#           httpGet:
+#             path: /health
+#             port: 8080
+#           failureThreshold: 2
+#           periodSeconds: 10
+        
+#         envFrom:
+#         - configMapRef:
+#             name: shipping
+        
+
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: shipping
+#   namespace: roboshop
+#   labels:
+#         project: roboshop
+#         component: shipping
+#         tier: be
+  
+# spec:
+#   selector:
+#     #lables
+#       project: roboshop
+#       component: shipping
+#       tier: be
+#   ports:
+#   - protocol: TCP
+#     port: 8080 #vice port
+#     targetPort: 8080 #tainer por
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -5,56 +101,58 @@ metadata:
   namespace: roboshop
   labels:
     project: roboshop
+    tier: backend
     component: shipping
-    tier: be
 data:
   CART_ENDPOINT: "cart:8080"
   DB_HOST: "mysql"
-
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shipping
   namespace: roboshop
+  # these labels are replicaset labels
   labels:
     project: roboshop
+    tier: backend
     component: shipping
-    tier: be
-
 spec:
-  # modify replicas according to your case
   replicas: 1
   selector:
+    # using these labels replica set selects the pod
     matchLabels:
       project: roboshop
+      tier: backend
       component: shipping
-      tier: be
-   
+  # This is pod definition, pod is subset of replicaset
   template:
     metadata:
       labels:
         project: roboshop
+        tier: backend
         component: shipping
-        tier: be
     spec:
       containers:
       - name: shipping
         image: challatoor/shipping:1.4.0
-        imagePullPolicy: Always
+        imagePullPolicy: Always # safe to pull everytime, there may be images with same version rebuilt and pushed
         resources:
           requests:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "200m"
+            memory: "256Mi"
           limits:
-            cpu: "100m"
-            memory: "128Mi"
+            cpu: "200m"
+            memory: "256Mi"
         readinessProbe:
+          # httpGet:
+          #   path: /health
+          #   port: 8080
           tcpSocket:
             port: 8080
-          failureThreshold: 5
+          failureThreshold: 2
           periodSeconds: 10
-          initialDelaySeconds: 60
+          initialDelaySeconds: 15
         startupProbe:
           httpGet:
             path: /health
@@ -67,12 +165,9 @@ spec:
             port: 8080
           failureThreshold: 2
           periodSeconds: 10
-        
         envFrom:
         - configMapRef:
             name: shipping
-        
-
 ---
 apiVersion: v1
 kind: Service
@@ -80,17 +175,16 @@ metadata:
   name: shipping
   namespace: roboshop
   labels:
-        project: roboshop
-        component: shipping
-        tier: be
-  
+    project: roboshop
+    tier: backend
+    component: shipping
 spec:
   selector:
-    #lables
-      project: roboshop
-      component: shipping
-      tier: be
+    # labels are used as selectors
+    project: roboshop
+    tier: backend
+    component: shipping
   ports:
   - protocol: TCP
-    port: 8080 #vice port
-    targetPort: 8080 #tainer port
+    port: 8080 # servie port
+    targetPort: 8080 # container port
