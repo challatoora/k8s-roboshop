@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping
+  namespace: roboshop
+  labels:
+    project: roboshop
+    component: shipping
+    tier: be
+data:
+  CART_ENDPOINT: "cart:8080"
+  DB_HOST: "mysql"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping
+  namespace: roboshop
+  labels:
+    project: roboshop
+    component: shipping
+    tier: be
+
+spec:
+  # modify replicas according to your case
+  replicas: 1
+  selector:
+    matchLabels:
+      project: roboshop
+      component: shipping
+      tier: be
+   
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        component: shipping
+        tier: be
+    spec:
+      containers:
+      - name: shipping
+        image: challatoor/shipping:1.0.0
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "100m"
+            memory: "128Mi"
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+          initialDelaySeconds: 15
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+        startupProbe:
+          httpGet:
+            path: /healthz
+            port: liveness-port
+          failureThreshold: 20
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: shipping
+        
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping
+  namespace: roboshop
+  labels:
+        project: roboshop
+        component: shipping
+        tier: be
+  
+spec:
+  selector:
+    #lables
+      project: roboshop
+      component: shipping
+      tier: be
+  ports:
+  - protocol: TCP
+    port: 8080 #vice port
+    targetPort: 8080 #tainer port
