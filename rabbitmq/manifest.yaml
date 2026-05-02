@@ -40,6 +40,9 @@ spec:
       containers:
       - name: rabbitmq
         image: challatoor/rabbitmq:1.0.0
+        envFrom:
+        - configMapRef:
+            name: rabbitmq
 
 ---
 apiVersion: v1
