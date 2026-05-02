@@ -39,7 +39,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: challatoor/rabbitmq:1.0.0
+        image: rabbitmq:3
         envFrom:
         - configMapRef:
             name: rabbitmq
