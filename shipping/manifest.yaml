@@ -101,7 +101,7 @@ metadata:
   namespace: roboshop
   labels:
     project: roboshop
-    tier: backend
+    tier: be
     component: shipping
 data:
   CART_ENDPOINT: "cart:8080"
@@ -115,7 +115,7 @@ metadata:
   # these labels are replicaset labels
   labels:
     project: roboshop
-    tier: backend
+    tier: be
     component: shipping
 spec:
   replicas: 1
@@ -123,14 +123,14 @@ spec:
     # using these labels replica set selects the pod
     matchLabels:
       project: roboshop
-      tier: backend
+      tier: be
       component: shipping
   # This is pod definition, pod is subset of replicaset
   template:
     metadata:
       labels:
         project: roboshop
-        tier: backend
+        tier: be
         component: shipping
     spec:
       containers:
@@ -176,13 +176,13 @@ metadata:
   namespace: roboshop
   labels:
     project: roboshop
-    tier: backend
+    tier: be
     component: shipping
 spec:
   selector:
     # labels are used as selectors
     project: roboshop
-    tier: backend
+    tier: be
     component: shipping
   ports:
   - protocol: TCP
