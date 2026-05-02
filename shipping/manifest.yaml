@@ -49,43 +49,25 @@ spec:
           limits:
             cpu: "100m"
             memory: "128Mi"
-        # readinessProbe:
-        #   tcpSocket:
-        #     port: 8080
-        #   failureThreshold: 2
-        #   periodSeconds: 10
-        #   initialDelaySeconds: 15
-        # startupProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: 8080
-        #   failureThreshold: 20
-        #   periodSeconds: 10
-        # livenessProbe:
-        #   httpGet:
-        #     path: /health
-        #     port: 8080
-        #   failureThreshold: 2
-        #   periodSeconds: 10
         readinessProbe:
           tcpSocket:
             port: 8080
-          failureThreshold: 2
+          failureThreshold: 5
           periodSeconds: 10
-          initialDelaySeconds: 30
-
+          initialDelaySeconds: 60
         startupProbe:
-          tcpSocket:
+          httpGet:
+            path: /health
             port: 8080
-          failureThreshold: 30
+          failureThreshold: 20
           periodSeconds: 10
-
         livenessProbe:
-          tcpSocket:
+          httpGet:
+            path: /health
             port: 8080
           failureThreshold: 2
           periodSeconds: 10
-          initialDelaySeconds: 30
+        
         envFrom:
         - configMapRef:
             name: shipping
