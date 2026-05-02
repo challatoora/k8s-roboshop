@@ -55,17 +55,17 @@ spec:
           failureThreshold: 2
           periodSeconds: 10
           initialDelaySeconds: 15
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 20
+          periodSeconds: 10
         livenessProbe:
           httpGet:
             path: /health
             port: 8080
           failureThreshold: 2
-          periodSeconds: 10
-        startupProbe:
-          httpGet:
-            path: /healthz
-            port: liveness-port
-          failureThreshold: 20
           periodSeconds: 10
         envFrom:
         - configMapRef:
